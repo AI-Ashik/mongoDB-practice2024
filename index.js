@@ -44,6 +44,29 @@ app.get("/delete/:id", async (req, res) => {
   }
 });
 
+app.get("/edit/:id", async (req, res) => {
+  try {
+    const user = await usersModel.findOne({ _id: req.params.id });
+    res.render("edit", { user });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user" });
+  }
+});
+
+app.post("/update/:id", async (req, res) => {
+  try {
+    const { name, email, image } = req.body;
+    const user = await usersModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { name, email, image },
+      { new: true }
+    );
+    res.redirect("/read");
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user" });
+  }
+});
+
 // server listen
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
